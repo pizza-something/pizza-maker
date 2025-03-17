@@ -1,7 +1,10 @@
 from dataclasses import dataclass
 
-from pizza_maker.entities.core.pizza.ingredient import IngredientData, IngredientName
-from pizza_maker.entities.quantities.grams import Grams
+from pizza_maker.entities.core.pizza.ingredient import (
+    IngredientData,
+    IngredientName,
+)
+from pizza_maker.entities.units.grams import Grams
 
 
 @dataclass(kw_only=True, frozen=True, slots=True)
@@ -12,7 +15,7 @@ class IngredientDataDto:
 
 def input_ingredient_data_of(dto: IngredientDataDto) -> IngredientData:
     """
-    :raises pizza_maker.entities.quantities.grams.NegaiveGramsError:
+    :raises pizza_maker.entities.units.grams.NegaiveGramsError:
     """
 
     return IngredientData(

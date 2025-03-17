@@ -7,8 +7,8 @@ from pizza_maker.entities.access.access_token import (
     valid,
 )
 from pizza_maker.entities.access.account import Account
-from pizza_maker.entities.framework.effect import New, new
-from pizza_maker.entities.framework.identified import Identified
+from pizza_maker.entities.common.effect import Existing, New, existing, new
+from pizza_maker.entities.common.identified import Identified
 from pizza_maker.entities.time.time import Time
 
 
@@ -17,19 +17,11 @@ class User(Identified[UUID]):
     id: UUID
 
 
-class InvalidAccessTokenError(Exception): ...
-
-
-class RegisteredUserForUserRegistrationError(Exception): ...
-
-
-def registered_user_when(*, user: User | None, account: Account) -> New[User]:
-    """
-    :raises pizza_maker.entities.core.user.RegisteredUserForUserRegistrationError:
-    """  # noqa: E501
-
+def new_user_when(
+    *, user: User | None, account: Account
+) -> New[User] | Existing[User]:
     if user is not None:
-        raise RegisteredUserForUserRegistrationError
+        return existing(user)
 
     return new(User(id=account.id))
 

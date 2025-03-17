@@ -25,11 +25,11 @@ from pizza_maker.application.ports.map import MapTo
 from pizza_maker.application.ports.pizzas import Pizzas
 from pizza_maker.application.ports.transaction import TransactionOf
 from pizza_maker.application.ports.users import Users
+from pizza_maker.entities.common.effect import Effect, just
 from pizza_maker.entities.core.pizza.crust import Crust
 from pizza_maker.entities.core.pizza.ingredient import Ingredient
 from pizza_maker.entities.core.pizza.pizza import Pizza, created_pizza_when
 from pizza_maker.entities.core.pizza.sauce import Sauce
-from pizza_maker.entities.framework.effect import Effect, just
 
 
 @dataclass(kw_only=True, frozen=True, slots=True)
@@ -57,12 +57,12 @@ class CreatePizza[
         ingredient_data_dtos: tuple[IngredientDataDto, ...],
     ) -> None:
         """
-        :raises pizza_maker.entities.quantities.millimeters.NegaiveMillimetersError:
-        :raises pizza_maker.entities.quantities.milliliters.NegaiveMillilitersError:
-        :raises pizza_maker.entities.quantities.grams.NegaiveGramsError:
+        :raises pizza_maker.entities.units.millimeters.NegaiveMillimetersError:
+        :raises pizza_maker.entities.units.milliliters.NegaiveMillilitersError:
+        :raises pizza_maker.entities.units.grams.NegaiveGramsError:
         :raises pizza_maker.entities.access.access_token.AccessDeniedError:
         :raises pizza_maker.entities.core.user.NoUserForUserAuthenticationError:
-        """  # noqa: E501
+        """
 
         current_time = await self.clock.get_current_time()
 

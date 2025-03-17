@@ -1,17 +1,17 @@
 from dataclasses import dataclass
 
 
-class NegaiveMillimetersError(Exception): ...
+class NegaiveMillilitersError(Exception): ...
 
 
 @dataclass(kw_only=True, frozen=True, slots=True)
-class Millimeters:
+class Milliliters:
     """
-    :raises input.entities.quantities.millimeters.NegaiveMillimetersError:
+    :raises input.entities.units.milliliters.NegaiveMillilitersError:
     """
 
     number: int
 
     def __post_init__(self) -> None:
         if self.number < 0:
-            raise NegaiveMillimetersError
+            raise NegaiveMillilitersError

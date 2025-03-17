@@ -1,20 +1,16 @@
-from sqlalchemy import join, select
 from sqlalchemy.orm import (
-    MapperProperty,
-    column_property,
     composite,
     registry,
     relationship,
 )
-from sqlalchemy.testing.schema import mapped_column
 
 from pizza_maker.entities.core.pizza.crust import Crust
 from pizza_maker.entities.core.pizza.ingredient import Ingredient
 from pizza_maker.entities.core.pizza.pizza import Pizza
 from pizza_maker.entities.core.pizza.sauce import Sauce
 from pizza_maker.entities.core.user import User
-from pizza_maker.entities.quantities.grams import Grams
-from pizza_maker.entities.quantities.milliliters import Milliliters
+from pizza_maker.entities.units.grams import Grams
+from pizza_maker.entities.units.milliliters import Milliliters
 from pizza_maker.infrastructure.sqlalchemy.tables import (
     crust_table,
     ingredient_table,

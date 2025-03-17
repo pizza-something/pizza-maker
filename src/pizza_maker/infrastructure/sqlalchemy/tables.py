@@ -1,4 +1,3 @@
-from enum import Enum, auto
 
 from sqlalchemy import (
     Column,
@@ -16,21 +15,8 @@ from pizza_maker.entities.core.pizza.sauce import SauceName
 
 metadata = MetaData()
 
-
-class EventName(Enum):
-    pizza_created = auto()
-
-
 sauce_name = postgresql.ENUM(SauceName, name="sauce_name")
 ingredient_name = postgresql.ENUM(IngredientName, "ingredient_name")
-event_name = postgresql.ENUM(EventName, "event_name")
-
-event_table = Table(
-    "events",
-    metadata,
-    Column("name", event_name, nullable=False),
-    Column("payload", postgresql.JSONB, nullable=False),
-)
 
 user_table = Table(
     "users",

@@ -7,14 +7,16 @@ import typenv
 class RuntimeEnvs:
     jwt_secret: str
     postgres_url: str
+    kafka_url: str
 
     @classmethod
     def load(cls) -> "RuntimeEnvs":
-        loader = typenv.Env()
+        env = typenv.Env()
 
         return RuntimeEnvs(
-            jwt_secret=loader.str("JWT_SECRET"),
-            postgres_url=loader.str("POSTGRES_URL"),
+            jwt_secret=env.str("JWT_SECRET"),
+            postgres_url=env.str("POSTGRES_URL"),
+            kafka_url=env.str("KAFKA_URL"),
         )
 
 
@@ -24,17 +26,21 @@ class AlembicEnvs:
 
     @classmethod
     def load(cls) -> "AlembicEnvs":
-        loader = typenv.Env()
+        env = typenv.Env()
 
-        return AlembicEnvs(postgres_url=loader.str("POSTGRES_URL"))
+        return AlembicEnvs(postgres_url=env.str("POSTGRES_URL"))
 
 
 @dataclass(kw_only=True, frozen=True, slots=True)
 class TestsEnvs:
     postgres_url: str
+    kafka_url: str
 
     @classmethod
     def load(cls) -> "TestsEnvs":
-        loader = typenv.Env()
+        env = typenv.Env()
 
-        return TestsEnvs(postgres_url=loader.str("POSTGRES_URL"))
+        return TestsEnvs(
+            postgres_url=env.str("POSTGRES_URL"),
+            kafka_url=env.str("KAFKA_URL"),
+        )

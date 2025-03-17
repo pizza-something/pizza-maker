@@ -1,12 +1,12 @@
 from collections.abc import Sequence
 
 from pizza_maker.application.ports.map import MapTo
+from pizza_maker.entities.common.effect import LifeCycle
 from pizza_maker.entities.core.pizza.crust import Crust
 from pizza_maker.entities.core.pizza.ingredient import Ingredient
 from pizza_maker.entities.core.pizza.pizza import Pizza
 from pizza_maker.entities.core.pizza.sauce import Sauce
 from pizza_maker.entities.core.user import User
-from pizza_maker.entities.framework.effect import LifeCycle
 from pizza_maker.infrastructure.sqlalchemy.driver import (
     PostgresDriver,
     session_of,

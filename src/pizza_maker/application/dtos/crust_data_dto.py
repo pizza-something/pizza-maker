@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from pizza_maker.entities.core.pizza.crust import CrustData
-from pizza_maker.entities.quantities.millimeters import Millimeters
+from pizza_maker.entities.units.millimeters import Millimeters
 
 
 @dataclass(kw_only=True, frozen=True, slots=True)
@@ -12,7 +12,7 @@ class CrustDataDto:
 
 def input_crust_data_of(dto: CrustDataDto) -> CrustData:
     """
-    :raises pizza_maker.entities.quantities.millimeters.NegaiveMillimetersError:
+    :raises pizza_maker.entities.units.millimeters.NegaiveMillimetersError:
     """
 
     return CrustData(

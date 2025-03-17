@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from uuid import UUID, uuid4
 
 from pizza_maker.entities.access.access_token import AccessToken
+from pizza_maker.entities.common.effect import Effect, just, many, new
+from pizza_maker.entities.common.identified import Identified
 from pizza_maker.entities.core.pizza.crust import (
     Crust,
     CrustData,
@@ -21,8 +23,6 @@ from pizza_maker.entities.core.user import (
     User,
     authenticated_user_when,
 )
-from pizza_maker.entities.framework.effect import Effect, just, many, new
-from pizza_maker.entities.framework.identified import Identified
 from pizza_maker.entities.time.time import Time
 
 

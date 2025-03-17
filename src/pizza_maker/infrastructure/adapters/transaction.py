@@ -2,8 +2,6 @@ from collections.abc import AsyncIterator, Sequence
 from contextlib import asynccontextmanager
 from typing import Any
 
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from pizza_maker.application.ports.transaction import TransactionOf
 from pizza_maker.infrastructure.in_memory_storage import (
     TransactionalInMemoryStorage,

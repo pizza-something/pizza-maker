@@ -2,9 +2,9 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from uuid import UUID, uuid4
 
-from pizza_maker.entities.framework.effect import Dirty, New, dirty, new
-from pizza_maker.entities.framework.identified import Identified
-from pizza_maker.entities.quantities.grams import Grams
+from pizza_maker.entities.common.effect import Dirty, New, dirty, new
+from pizza_maker.entities.common.identified import Identified
+from pizza_maker.entities.units.grams import Grams
 
 
 class CheeseName(Enum):

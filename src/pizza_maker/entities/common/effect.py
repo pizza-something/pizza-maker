@@ -6,7 +6,7 @@ from itertools import chain
 from operator import and_
 from typing import Any, Never, Self, cast
 
-from pizza_maker.entities.framework.identified import Identified, Identity
+from pizza_maker.entities.common.identified import Identified, Identity
 
 
 class DuplicateError(Exception): ...
@@ -57,7 +57,7 @@ class Effect[
         OtherDeletedT: Identified,
     ](
         self,
-        other: "_Effectable[OtherValueT, OtherNewT, OtherDirtyT, OtherDeletedT, Any]",
+        other: "_Effectable[OtherValueT, OtherNewT, OtherDirtyT, OtherDeletedT, Any]",  # noqa: E501
     ) -> "Effect[OtherValueT, NewT | OtherNewT, DirtyT | OtherDirtyT, DeletedT | OtherDeletedT]":  # noqa: E501
         other = other._as_effect()
 
