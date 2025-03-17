@@ -17,12 +17,12 @@ from pizza_maker.application.ports.clock import Clock
 from pizza_maker.application.ports.decoded_access_token import (
     DecodedAccessTokenWhen,
 )
+from pizza_maker.application.ports.event_queue import (
+    EventQueue,
+    PizzaCreatedEvent,
+)
 from pizza_maker.application.ports.map import MapTo
 from pizza_maker.application.ports.pizzas import Pizzas
-from pizza_maker.application.ports.private_event_queue import (
-    PizzaCreatedEvent,
-    PrivateEventQueue,
-)
 from pizza_maker.application.ports.transaction import TransactionOf
 from pizza_maker.application.ports.users import Users
 from pizza_maker.entities.core.pizza.crust import Crust
@@ -34,21 +34,20 @@ from pizza_maker.entities.framework.effect import Effect, just
 
 @dataclass(kw_only=True, frozen=True, slots=True)
 class CreatePizza[
-    EncodedAccessTokenT,
-    UsersT: Users,
-    PizzasT: Pizzas,
-    PrivateEventQueueT: PrivateEventQueue[Any],
+    EncodedAccessTokenT = Any,
+    UsersT: Users = Users,
+    PizzasT: Pizzas = Pizzas,
 ]:
     clock: Clock
     decoded_access_token_when: DecodedAccessTokenWhen[EncodedAccessTokenT]
     pizzas: PizzasT
     users: UsersT
-    private_event_queue: PrivateEventQueueT
+    event_queue: EventQueue
     map_to: MapTo[
         tuple[PizzasT],
         Effect[Pizza, Pizza | Sauce | Ingredient | Crust]
     ]
-    transaction_of: TransactionOf[tuple[PizzasT, UsersT, PrivateEventQueueT]]
+    transaction_of: TransactionOf[tuple[PizzasT, UsersT]]
 
     async def __call__(
         self,
@@ -76,9 +75,7 @@ class CreatePizza[
             encoded_access_token=encoded_access_token
         )
 
-        async with self.transaction_of(
-            (self.pizzas, self.users, self.private_event_queue)
-        ):
+        async with self.transaction_of((self.pizzas, self.users)):
             if access_token is None:
                 user = None
             else:
@@ -93,7 +90,5 @@ class CreatePizza[
                 user=user,
             )
 
-            event = PizzaCreatedEvent(pizza=just(pizza))
-
             await self.map_to((self.pizzas, ), pizza)
-            await self.private_event_queue.push(event)
+            await self.event_queue.push(PizzaCreatedEvent(pizza=just(pizza)))

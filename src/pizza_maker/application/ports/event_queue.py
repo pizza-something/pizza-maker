@@ -1,6 +1,4 @@
 from abc import ABC, abstractmethod
-from collections.abc import Sequence
-from contextlib import AbstractAsyncContextManager
 from dataclasses import dataclass
 
 from pizza_maker.entities.core.pizza.pizza import Pizza
@@ -15,11 +13,6 @@ class PizzaCreatedEvent(Event):
     pizza: Pizza
 
 
-class PrivateEventQueue[EventBatchT](ABC):
+class EventQueue(ABC):
     @abstractmethod
     async def push(self, event: Event) -> None: ...
-
-    @abstractmethod
-    def pull_commitable_batch(
-        self
-    ) -> AbstractAsyncContextManager[EventBatchT]: ...
