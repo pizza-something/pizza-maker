@@ -4,7 +4,7 @@ from contextlib import AbstractAsyncContextManager
 from typing import Any
 
 
-class Transaction(AbstractAsyncContextManager[Any], ABC): ...
+type Transaction = AbstractAsyncContextManager[Any]
 
 
 class TransactionOf[StoragesT: Sequence[Any]](ABC):

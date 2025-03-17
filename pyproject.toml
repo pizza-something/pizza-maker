@@ -18,8 +18,9 @@ dependencies = [
     "sqlalchemy==2.0.38",
     "psycopg[binary]==3.2.5",
     "alembic==1.14.1",
+    "alembic-postgresql-enum==1.7.0",
     "taskiq-redis==1.0.3",
-    "faststream[kafka]>=0.5.35",
+    "faststream[kafka]==0.5.35",
 ]
 
 [project.optional-dependencies]

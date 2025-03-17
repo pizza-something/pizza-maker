@@ -1,11 +1,18 @@
 from dataclasses import dataclass
+from typing import Any
 
-from pizza_maker.application.dtos.crust_dto import CrustDto, input_crust_of
-from pizza_maker.application.dtos.ingredient_dto import (
-    IngredientDto,
-    input_ingredient_of,
+from pizza_maker.application.dtos.crust_data_dto import (
+    CrustDataDto,
+    input_crust_data_of,
 )
-from pizza_maker.application.dtos.sauce_dto import SauceDto, input_sauce_of
+from pizza_maker.application.dtos.ingredient_data_dto import (
+    IngredientDataDto,
+    input_ingredient_data_of,
+)
+from pizza_maker.application.dtos.sauce_dto import (
+    SauceDataDto,
+    input_sauce_data_of,
+)
 from pizza_maker.application.ports.clock import Clock
 from pizza_maker.application.ports.decoded_access_token import (
     DecodedAccessTokenWhen,
@@ -17,55 +24,76 @@ from pizza_maker.application.ports.private_event_queue import (
     PrivateEventQueue,
 )
 from pizza_maker.application.ports.transaction import TransactionOf
-from pizza_maker.entities.core.pizza import Pizza, created_pizza_when
-from pizza_maker.entities.framework.effect import New, just
+from pizza_maker.application.ports.users import Users
+from pizza_maker.entities.core.pizza.crust import Crust
+from pizza_maker.entities.core.pizza.ingredient import Ingredient
+from pizza_maker.entities.core.pizza.pizza import Pizza, created_pizza_when
+from pizza_maker.entities.core.pizza.sauce import Sauce
+from pizza_maker.entities.framework.effect import Effect, just
 
 
 @dataclass(kw_only=True, frozen=True, slots=True)
 class CreatePizza[
-    EncodedAccessTokenT, PizzasT: Pizzas, PrivateEventQueueT: PrivateEventQueue
+    EncodedAccessTokenT,
+    UsersT: Users,
+    PizzasT: Pizzas,
+    PrivateEventQueueT: PrivateEventQueue[Any],
 ]:
     clock: Clock
     decoded_access_token_when: DecodedAccessTokenWhen[EncodedAccessTokenT]
     pizzas: PizzasT
+    users: UsersT
     private_event_queue: PrivateEventQueueT
-    map_to: MapTo[tuple[PizzasT, ...], New[Pizza]]
-    transaction_of: TransactionOf[tuple[PizzasT, PrivateEventQueueT]]
+    map_to: MapTo[
+        tuple[PizzasT],
+        Effect[Pizza, Pizza | Sauce | Ingredient | Crust]
+    ]
+    transaction_of: TransactionOf[tuple[PizzasT, UsersT, PrivateEventQueueT]]
 
     async def __call__(
         self,
         encoded_access_token: EncodedAccessTokenT,
-        sauce_dto: SauceDto,
-        crust_dto: CrustDto,
-        ingredient_dtos: tuple[IngredientDto, ...],
+        sauce_data_dto: SauceDataDto,
+        crust_data_dto: CrustDataDto,
+        ingredient_data_dtos: tuple[IngredientDataDto, ...],
     ) -> None:
         """
         :raises pizza_maker.entities.quantities.millimeters.NegaiveMillimetersError:
         :raises pizza_maker.entities.quantities.milliliters.NegaiveMillilitersError:
         :raises pizza_maker.entities.quantities.grams.NegaiveGramsError:
         :raises pizza_maker.entities.access.access_token.AccessDeniedError:
+        :raises pizza_maker.entities.core.user.NoUserForUserAuthenticationError:
         """  # noqa: E501
 
         current_time = await self.clock.get_current_time()
 
-        ingredients = tuple(map(input_ingredient_of, ingredient_dtos))
-        sauce = input_sauce_of(sauce_dto)
-        crust = input_crust_of(crust_dto)
-
+        ingredient_data_set = (
+            tuple(map(input_ingredient_data_of, ingredient_data_dtos))
+        )
+        sauce_data = input_sauce_data_of(sauce_data_dto)
+        crust_data = input_crust_data_of(crust_data_dto)
         access_token = await self.decoded_access_token_when(
             encoded_access_token=encoded_access_token
         )
 
-        pizza = created_pizza_when(
-            access_token=access_token,
-            current_time=current_time,
-            ingredients=ingredients,
-            sauce=sauce,
-            crust=crust,
-        )
+        async with self.transaction_of(
+            (self.pizzas, self.users, self.private_event_queue)
+        ):
+            if access_token is None:
+                user = None
+            else:
+                user = await self.users.user_with_id(access_token.user_id)
 
-        event = PizzaCreatedEvent(pizza=just(pizza))
+            pizza = created_pizza_when(
+                access_token=access_token,
+                current_time=current_time,
+                ingredient_data_set=ingredient_data_set,
+                sauce_data=sauce_data,
+                crust_data=crust_data,
+                user=user,
+            )
 
-        async with self.transaction_of((self.pizzas, self.private_event_queue)):
+            event = PizzaCreatedEvent(pizza=just(pizza))
+
             await self.map_to((self.pizzas, ), pizza)
             await self.private_event_queue.push(event)

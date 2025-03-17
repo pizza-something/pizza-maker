@@ -8,7 +8,7 @@ class NotUTCTimeError(Exception): ...
 @dataclass(kw_only=True, frozen=True, slots=True)
 class Time:
     """
-    :raises input.entities.time.time.NotUTCTimeError:
+    :raises pizza_maker.entities.time.time.NotUTCTimeError:
     """
 
     datetime: datetime

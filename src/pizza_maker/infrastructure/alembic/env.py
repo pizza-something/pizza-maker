@@ -1,10 +1,11 @@
 from logging.config import fileConfig
 
+import alembic_postgresql_enum  # noqa: F401
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from pizza_maker.infrastructure.typenv.envs import AlembicEnvs
 from pizza_maker.infrastructure.sqlalchemy.tables import metadata
+from pizza_maker.infrastructure.typenv.envs import AlembicEnvs
 
 
 config = context.config

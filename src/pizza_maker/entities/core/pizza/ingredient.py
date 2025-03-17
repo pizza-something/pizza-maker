@@ -1,6 +1,9 @@
 from dataclasses import dataclass
 from enum import Enum, auto
+from uuid import UUID, uuid4
 
+from pizza_maker.entities.framework.effect import Dirty, New, dirty, new
+from pizza_maker.entities.framework.identified import Identified
 from pizza_maker.entities.quantities.grams import Grams
 
 
@@ -66,6 +69,41 @@ type IngredientName = CheeseName | MeatName | SeafoodName | HerbName
 
 
 @dataclass(kw_only=True, frozen=True, slots=True)
-class Ingredient:
+class Ingredient(Identified[UUID]):
+    id: UUID
+    pizza_id: UUID
     name: IngredientName
     grams: Grams
+
+
+@dataclass(kw_only=True, frozen=True, slots=True)
+class IngredientData:
+    name: IngredientName
+    grams: Grams
+
+
+def new_ingredient_when(
+    *,
+    ingredient_data: IngredientData,
+    pizza_id: UUID,
+) -> New[Ingredient]:
+    return new(Ingredient(
+        id=uuid4(),
+        name=ingredient_data.name,
+        grams=ingredient_data.grams,
+        pizza_id=pizza_id,
+    ))
+
+
+def changed_ingredient_when(
+    *,
+    ingredient: Ingredient,
+    ingredient_data: IngredientData,
+    pizza_id: UUID,
+) -> Dirty[Ingredient]:
+    return dirty(Ingredient(
+        id=ingredient.id,
+        name=ingredient_data.name,
+        grams=ingredient_data.grams,
+        pizza_id=pizza_id,
+    ))
