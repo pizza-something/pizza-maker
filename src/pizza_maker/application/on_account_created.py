@@ -15,7 +15,7 @@ from pizza_maker.entities.core.user import (
 
 
 @dataclass(kw_only=True, frozen=True, slots=True)
-class OnAccountCreated[UsersT: Users]:
+class OnAccountCreated[UsersT: Users = Users]:
     users: UsersT
     map_to: MapTo[tuple[UsersT], New[User] | Existing[User]]
     transaction_of: TransactionOf[tuple[UsersT]]

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse, Response
 
-from pizza_maker.presentation.fastapi.schemas import NoDataSchema
+from pizza_maker.infrastructure.pydantic.schemas.common import NoDataSchema
 from pizza_maker.presentation.fastapi.tags import Tag
 
 

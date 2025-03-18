@@ -7,11 +7,11 @@ from fastapi.security import APIKeyCookie
 
 
 @dataclass(frozen=True, slots=True)
-class UserDataCookie:
-    __name: ClassVar = "userData"
+class AccessTokenCookie:
+    __name: ClassVar = "accessToken"
     __api_key: ClassVar = APIKeyCookie(
         name=__name,
-        scheme_name="User data cookie",
+        scheme_name="Access token cookie",
         description=(
             "Required for various operations. Obtained after registration."
         ),

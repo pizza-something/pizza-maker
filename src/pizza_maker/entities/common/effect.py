@@ -202,7 +202,16 @@ type AnyEffect[
     DeletedT: Identified = Any,
 ] = Effect[ValueT, NewT, DirtyT, DeletedT]
 
-type LifeCycle[ValueT: Identified] = Effect[Any, ValueT, ValueT, ValueT]
+type LifeCycle[ValueT: Identified] = (
+    Effect[Any, Never, Never, Never]
+    | Effect[Any, ValueT, Never, Never]
+    | Effect[Any, Never, ValueT, Never]
+    | Effect[Any, ValueT, ValueT, Never]
+    | Effect[Any, Never, Never, ValueT]
+    | Effect[Any, ValueT, Never, ValueT]
+    | Effect[Any, Never, ValueT, ValueT]
+    | Effect[Any, ValueT, ValueT, ValueT]
+)
 
 type Existing[ValueT: Identified] = Effect[ValueT, Never, Never, Never]
 type New[ValueT: Identified] = Effect[ValueT, ValueT, Never, Never]

@@ -1,13 +1,14 @@
 name: pizza-maker
 
 services:
-  backend:
+  fastapi:
+    image: pizza-maker-backend:dev
     build:
       context: ../../
       dockerfile: deployments/dev/backend/Dockerfile
       tags:
         - "pizza-maker-backend:dev"
-    container_name: pizza-maker-backend
+    container_name: pizza-maker-fastapi
     volumes:
       - ../..:/app
       - backend-data:/run/app
@@ -16,15 +17,40 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      kafka:
+        condition: service_started
     environment:
       JWT_SECRET: super-secret-jwt-secret
       POSTGRES_URL: postgresql+psycopg://root:root@postgres/root
-    command: pizza-maker-web-service
+      KAFKA_URL: kafka:9092
+    command: pizza-maker-fastapi
     healthcheck:
       test: wget backend:8000/healthcheck -q -O /dev/null
       start_period: 1m
       start_interval: 1s
       interval: 5s
+
+  faststream:
+    image: pizza-maker-backend:dev
+    build:
+      context: ../../
+      dockerfile: deployments/dev/backend/Dockerfile
+      tags:
+        - "pizza-maker-backend:dev"
+    container_name: pizza-maker-faststream
+    volumes:
+      - ../..:/app
+      - backend-data:/run/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+    environment:
+      JWT_SECRET: super-secret-jwt-secret
+      POSTGRES_URL: postgresql+psycopg://root:root@postgres/root
+      KAFKA_URL: kafka:9092
+    command: pizza-maker-faststream
 
   postgres:
     image: postgres:16.3-alpine3.19
@@ -43,9 +69,28 @@ services:
       start_interval: 1s
       interval: 5s
 
+  kafka:
+    image: bitnami/kafka:3.9.0
+    container_name: pizza-maker-kafka
+    labels:
+      deployment: dev
+    environment:
+      KAFKA_CFG_NODE_ID: 0
+      KAFKA_CFG_PROCESS_ROLES: controller,broker
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka:9093
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+    volumes:
+      - kafka-data:/bitnami/kafka
+
 volumes:
   backend-data: null
 
   postgres-data:
+    labels:
+      db: true
+
+  kafka-data:
     labels:
       db: true

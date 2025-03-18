@@ -21,7 +21,7 @@ def is_expired(
     return access_token.expiration_time <= current_time
 
 
-class AccessDeniedError(Exception): ...
+class InvalidAccessTokenForAuthenticationError(Exception): ...
 
 
 def valid(
@@ -30,13 +30,13 @@ def valid(
     current_time: Time,
 ) -> ValidAccessToken:
     """
-    :raises pizza_maker.entities.access.access_token.AccessDeniedError:
-    """
+    :raises pizza_maker.entities.access.access_token.InvalidAccessTokenForAuthenticationError:
+    """  # noqa: E501
 
     if access_token is None:
-        raise AccessDeniedError
+        raise InvalidAccessTokenForAuthenticationError
 
     if is_expired(access_token, current_time=current_time):
-        raise AccessDeniedError
+        raise InvalidAccessTokenForAuthenticationError
 
     return ValidAccessToken(user_id=access_token.user_id)

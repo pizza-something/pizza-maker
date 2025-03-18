@@ -45,9 +45,9 @@ def created_pizza_when(
     ingredient_data_set: tuple[IngredientData, ...],
 ) -> Effect[Pizza, Pizza | Sauce | Ingredient | Crust]:
     """
-    :raises pizza_maker.entities.access.access_token.AccessDeniedError:
+    :raises pizza_maker.entities.access.access_token.InvalidAccessTokenForAuthenticationError:
     :raises pizza_maker.entities.core.user.NoUserForUserAuthenticationError:
-    """
+    """  # noqa: E501
 
     user = authenticated_user_when(
         user=user, access_token=access_token, current_time=current_time

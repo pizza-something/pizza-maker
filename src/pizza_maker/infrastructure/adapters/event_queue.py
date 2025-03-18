@@ -1,11 +1,10 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-from faststream.kafka import KafkaBroker
-
 from pizza_maker.application.ports.event_queue import Event
-from pizza_maker.infrastructure.faststream.events import (
-    kafka_event_and_topic_of,
+from pizza_maker.infrastructure.faststream.events import kafka_event_of
+from pizza_maker.infrastructure.faststream.publisher_regitry import (
+    PublisherRegistry,
 )
 from pizza_maker.infrastructure.in_memory_storage import (
     TransactionalInMemoryStorage,
@@ -19,8 +18,9 @@ class InMemortyEventQueue(TransactionalInMemoryStorage[Event]):
 
 
 class KafkaEventQueue(ABC):
-    broker: KafkaBroker
+    publisher_regitry: PublisherRegistry
 
     @abstractmethod
     async def push(self, event: Event) -> None:
-        await self.broker.publish(*kafka_event_and_topic_of(event))
+        publisher = self.publisher_regitry.publisher_of(type(event))
+        await publisher.publish(kafka_event_of(event))

@@ -33,6 +33,7 @@ dev = [
     "dirty-equals==0.8.0",
     "httpx==0.27.2",
     "httpx-ws==0.7.0",
+    "faststream[cli]==0.5.35",
 ]
 prod = []
 
@@ -44,7 +45,8 @@ build-backend = "hatchling.build"
 packages = ["src/pizza_maker"]
 
 [project.scripts]
-pizza-maker-web-service = "pizza_maker.entrypoint.web_service.__main__:main"
+pizza-maker-fastapi = "pizza_maker.entrypoint.fastapi.__main__:main"
+pizza-maker-faststream = "pizza_maker.entrypoint.faststream.__main__:main"
 
 [tool.mypy]
 strict = true

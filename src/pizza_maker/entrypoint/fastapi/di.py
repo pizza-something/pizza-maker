@@ -1,9 +1,6 @@
 from dishka import Provider, Scope, make_async_container, provide
 
-from pizza_maker.entrypoint.common.di import (
-    ApplicationProvider,
-    InfrastructureProvider,
-)
+from pizza_maker.entrypoint.common.di import ApplicationProvider
 from pizza_maker.presentation.fastapi.app import (
     FastAPIAppCoroutines,
     FastAPIAppRouters,
@@ -11,7 +8,7 @@ from pizza_maker.presentation.fastapi.app import (
 from pizza_maker.presentation.fastapi.routers import all_routers
 
 
-class WebServiceProvider(Provider):
+class FastApiProvider(Provider):
     scope = Scope.APP
 
     @provide
@@ -24,7 +21,6 @@ class WebServiceProvider(Provider):
 
 
 container = make_async_container(
-    WebServiceProvider(),
-    InfrastructureProvider(),
+    FastApiProvider(),
     ApplicationProvider(),
 )

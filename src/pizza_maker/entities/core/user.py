@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from uuid import UUID
 
 from pizza_maker.entities.access.access_token import (
-    AccessDeniedError,
     AccessToken,
+    InvalidAccessTokenForAuthenticationError,
     valid,
 )
 from pizza_maker.entities.access.account import Account
@@ -36,9 +36,9 @@ def authenticated_user_when(
     current_time: Time,
 ) -> User:
     """
-    :raises pizza_maker.entities.access.access_token.AccessDeniedError:
+    :raises pizza_maker.entities.access.access_token.InvalidAccessTokenForAuthenticationError:
     :raises pizza_maker.entities.core.user.NoUserForUserAuthenticationError:
-    """
+    """  # noqa: E501
 
     valid_access_token = valid(access_token, current_time=current_time)
 
@@ -46,6 +46,6 @@ def authenticated_user_when(
         raise NoUserForUserAuthenticationError
 
     if user.id != valid_access_token.user_id:
-        raise AccessDeniedError
+        raise InvalidAccessTokenForAuthenticationError
 
     return user

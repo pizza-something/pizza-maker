@@ -1,5 +1,6 @@
 from collections.abc import Iterator
 from dataclasses import dataclass
+from typing import cast
 from uuid import UUID
 
 from sqlalchemy import select
@@ -33,4 +34,4 @@ class InPostgresUsers(Users, PostgresDriver):
     async def user_with_id(self, id: UUID) -> User | None:
         stmt = select(User).where(user_table.c.id == id)
 
-        return await self.session.scalar(stmt)
+        return cast(User | None, await self.session.scalar(stmt))

@@ -1,4 +1,4 @@
-FROM ghcr.io/astral-sh/uv:python3.13-alpine AS app
+FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim AS app
 
 WORKDIR /app
 COPY . .
@@ -12,4 +12,4 @@ ENV MYPYPATH /app/src:/app/tests
 
 ENV WATCHFILES_FORCE_POLLING true
 
-ENTRYPOINT ["ash", "deployments/dev/backend/entrypoint.sh"]
+ENTRYPOINT ["bash", "deployments/dev/backend/entrypoint.sh"]

@@ -13,16 +13,22 @@ from pizza_maker.infrastructure.sqlalchemy.driver import (
 )
 
 
-InPostgresEntity = User | Pizza | Sauce | Crust | Ingredient
+type InPostgresEntityLifeCycle = (
+    LifeCycle[User]
+    | LifeCycle[Pizza]
+    | LifeCycle[Sauce]
+    | LifeCycle[Crust]
+    | LifeCycle[Ingredient]
+)
 
 
 class MapToPostgres(
-    MapTo[Sequence[PostgresDriver], LifeCycle[InPostgresEntity]]
+    MapTo[Sequence[PostgresDriver], InPostgresEntityLifeCycle]
 ):
     async def __call__(
         self,
         storages: Sequence[PostgresDriver],
-        effect: LifeCycle[InPostgresEntity],
+        effect: InPostgresEntityLifeCycle,
     ) -> None:
         session = session_of(storages)
 

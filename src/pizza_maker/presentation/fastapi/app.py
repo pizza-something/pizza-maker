@@ -47,15 +47,14 @@ class _FastAPIWithAdditionalModels(FastAPI):
 
 
 async def app_from(container: AsyncContainer) -> FastAPI:
-    author_url = "https://github.com/emptybutton"
-    repo_url = f"{author_url}/app"
     version = "0.1.0"
+    author_url = "https://github.com/pizza-something"
+    repo_name = "pizza-maker"
+    repo_url = f"{author_url}/{repo_name}"
 
     app = _FastAPIWithAdditionalModels(
-        title="pizza-maker",
+        title=repo_name,
         version=version,
-        summary="My pizza-maker",
-        description="This is pizza-maker",
         openapi_tags=tags_metadata,
         contact={"name": "Alexander Smolin", "url": author_url},
         license_info={
