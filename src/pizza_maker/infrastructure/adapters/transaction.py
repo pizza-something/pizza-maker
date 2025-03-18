@@ -8,7 +8,7 @@ from pizza_maker.infrastructure.in_memory_storage import (
 )
 from pizza_maker.infrastructure.sqlalchemy.driver import (
     PostgresDriver,
-    session_of,
+    single_session_of,
 )
 
 
@@ -17,7 +17,7 @@ class InPostgresTransactionOf(TransactionOf[Sequence[PostgresDriver]]):
     async def __call__(
         self, storages: Sequence[PostgresDriver]
     ) -> AsyncIterator[None]:
-        async with session_of(storages).begin():
+        async with single_session_of(storages).begin():
             yield
 
 

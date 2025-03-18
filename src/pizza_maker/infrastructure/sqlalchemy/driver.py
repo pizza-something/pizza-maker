@@ -12,7 +12,7 @@ class PostgresDriver:
 class ManyOrNoSessionsError(Exception): ...
 
 
-def session_of(drivers: Sequence[PostgresDriver]) -> AsyncSession:
+def single_session_of(drivers: Sequence[PostgresDriver]) -> AsyncSession:
     sessions = set(driver.session for driver in drivers)
 
     if len(sessions) != 1:

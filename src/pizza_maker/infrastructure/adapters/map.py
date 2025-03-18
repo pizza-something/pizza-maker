@@ -9,7 +9,7 @@ from pizza_maker.entities.core.pizza.sauce import Sauce
 from pizza_maker.entities.core.user import User
 from pizza_maker.infrastructure.sqlalchemy.driver import (
     PostgresDriver,
-    session_of,
+    single_session_of,
 )
 
 
@@ -30,7 +30,7 @@ class MapToPostgres(
         storages: Sequence[PostgresDriver],
         effect: InPostgresEntityLifeCycle,
     ) -> None:
-        session = session_of(storages)
+        session = single_session_of(storages)
 
         session.add_all(effect.new_values)
 
