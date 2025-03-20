@@ -5,4 +5,3 @@ from pizza_maker.presentation.faststream.app import app_from
 
 
 app = asyncio.run(app_from(container))
-

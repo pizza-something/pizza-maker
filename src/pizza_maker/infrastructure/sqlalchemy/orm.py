@@ -23,8 +23,8 @@ from pizza_maker.infrastructure.sqlalchemy.tables import (
 
 
 def _mutable[T: type](type_: T) -> T:
-    type_.__setattr__ = object.__setattr__
-    type_.__delattr__ = object.__delattr__
+    type_.__setattr__ = object.__setattr__  # type: ignore[method-assign, assignment]
+    type_.__delattr__ = object.__delattr__  # type: ignore[method-assign, assignment]
 
     return type_
 
