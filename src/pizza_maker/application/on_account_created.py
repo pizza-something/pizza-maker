@@ -7,17 +7,13 @@ from pizza_maker.application.dtos.account_dto import (
 from pizza_maker.application.ports.map import MapTo
 from pizza_maker.application.ports.transaction import TransactionOf
 from pizza_maker.application.ports.users import Users
-from pizza_maker.entities.common.effect import Existing, New
-from pizza_maker.entities.core.user import (
-    User,
-    new_user_when,
-)
+from pizza_maker.entities.core.user import new_user_when
 
 
 @dataclass(kw_only=True, frozen=True, slots=True)
 class OnAccountCreated[UsersT: Users = Users]:
     users: UsersT
-    map_to: MapTo[tuple[UsersT], New[User] | Existing[User]]
+    map_to: MapTo[tuple[UsersT]]
     transaction_of: TransactionOf[tuple[UsersT]]
 
     async def __call__(self, account_dto: AccountDto) -> None:

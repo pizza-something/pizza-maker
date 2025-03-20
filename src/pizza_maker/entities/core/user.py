@@ -17,6 +17,9 @@ class User(Identified[UUID]):
     id: UUID
 
 
+type UserAggregate = User
+
+
 def new_user_when(
     *, user: User | None, account: Account
 ) -> New[User] | Existing[User]:

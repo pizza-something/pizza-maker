@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from pizza_maker.application.ports.event_queue import Event
 from pizza_maker.infrastructure.faststream.events import kafka_event_of
 from pizza_maker.infrastructure.faststream.publisher_regitry import (
-    PublisherRegistry,
+    KafkaPublisherRegistry,
 )
 from pizza_maker.infrastructure.in_memory_storage import (
     TransactionalInMemoryStorage,
@@ -18,7 +18,7 @@ class InMemortyEventQueue(TransactionalInMemoryStorage[Event]):
 
 
 class KafkaEventQueue(ABC):
-    publisher_regitry: PublisherRegistry
+    publisher_regitry: KafkaPublisherRegistry
 
     @abstractmethod
     async def push(self, event: Event) -> None:

@@ -25,11 +25,8 @@ from pizza_maker.application.ports.map import MapTo
 from pizza_maker.application.ports.pizzas import Pizzas
 from pizza_maker.application.ports.transaction import TransactionOf
 from pizza_maker.application.ports.users import Users
-from pizza_maker.entities.common.effect import Effect, just
-from pizza_maker.entities.core.pizza.crust import Crust
-from pizza_maker.entities.core.pizza.ingredient import Ingredient
-from pizza_maker.entities.core.pizza.pizza import Pizza, created_pizza_when
-from pizza_maker.entities.core.pizza.sauce import Sauce
+from pizza_maker.entities.common.effect import just
+from pizza_maker.entities.core.pizza.pizza import created_pizza_when
 
 
 @dataclass(kw_only=True, frozen=True, slots=True)
@@ -43,10 +40,7 @@ class CreatePizza[
     pizzas: PizzasT
     users: UsersT
     event_queue: EventQueue
-    map_to: MapTo[
-        tuple[PizzasT],
-        Effect[Pizza, Pizza | Sauce | Ingredient | Crust]
-    ]
+    map_to: MapTo[tuple[PizzasT]]
     transaction_of: TransactionOf[tuple[PizzasT, UsersT]]
 
     async def __call__(

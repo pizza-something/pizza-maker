@@ -1,56 +1,45 @@
 name: pizza-maker
 
+x-services:
+  backend: &backend
+    image: pizza-maker-backend:dev
+    build:
+      context: ../../
+      dockerfile: deployments/dev/backend/Dockerfile
+      tags:
+        - "pizza-maker-backend:dev"
+    volumes:
+      - ../..:/app
+      - backend-data:/run/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    environment:
+      JWT_SECRET: super-secret-jwt-secret
+      POSTGRES_URL: postgresql+psycopg://root:root@postgres/root
+      KAFKA_URL: kafka:9092
+
 services:
   fastapi:
-    image: pizza-maker-backend:dev
-    build:
-      context: ../../
-      dockerfile: deployments/dev/backend/Dockerfile
-      tags:
-        - "pizza-maker-backend:dev"
+    <<: *backend
     container_name: pizza-maker-fastapi
-    volumes:
-      - ../..:/app
-      - backend-data:/run/app
+    command: python src/pizza_maker/entrypoint/fastapi
     ports:
       - 8000:8000
-    depends_on:
-      postgres:
-        condition: service_healthy
-      kafka:
-        condition: service_started
-    environment:
-      JWT_SECRET: super-secret-jwt-secret
-      POSTGRES_URL: postgresql+psycopg://root:root@postgres/root
-      KAFKA_URL: kafka:9092
-    command: pizza-maker-fastapi
-    healthcheck:
-      test: wget backend:8000/healthcheck -q -O /dev/null
-      start_period: 1m
-      start_interval: 1s
-      interval: 5s
 
-  faststream:
-    image: pizza-maker-backend:dev
-    build:
-      context: ../../
-      dockerfile: deployments/dev/backend/Dockerfile
-      tags:
-        - "pizza-maker-backend:dev"
-    container_name: pizza-maker-faststream
-    volumes:
-      - ../..:/app
-      - backend-data:/run/app
-    depends_on:
-      postgres:
-        condition: service_healthy
-      kafka:
-        condition: service_started
-    environment:
-      JWT_SECRET: super-secret-jwt-secret
-      POSTGRES_URL: postgresql+psycopg://root:root@postgres/root
-      KAFKA_URL: kafka:9092
-    command: pizza-maker-faststream
+  faststream-consumer:
+    <<: *backend
+    container_name: pizza-maker-faststream-consumer
+    command: faststream run pizza_maker.entrypoint.faststream.app:app --reload
+
+  faststream-docs:
+    <<: *backend
+    container_name: pizza-maker-faststream-docs
+    command: faststream docs serve pizza_maker.entrypoint.faststream.app:app --host 0.0.0.0 --port 8008 --reload
+    ports:
+      - 8008:8008
 
   postgres:
     image: postgres:16.3-alpine3.19
@@ -83,6 +72,11 @@ services:
       KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
     volumes:
       - kafka-data:/bitnami/kafka
+    healthcheck:
+      test: kafka-topics.sh --list --bootstrap-server kafka:9092
+      start_period: 1m
+      start_interval: 1s
+      interval: 5s
 
 volumes:
   backend-data: null

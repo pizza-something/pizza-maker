@@ -7,7 +7,8 @@ from pizza_maker.entities.common.identified import Identified
 from pizza_maker.entities.units.grams import Grams
 
 
-class CheeseName(Enum):
+class IngredientName(Enum):
+    # chesee
     mozzarella = auto()
     parmesan = auto()
     ricotta = auto()
@@ -20,8 +21,7 @@ class CheeseName(Enum):
     goat_cheese = auto()
     vegan_cheese = auto()
 
-
-class MeatName(Enum):
+    # meat
     pepperoni = auto()
     ham = auto()
     bacon = auto()
@@ -33,16 +33,14 @@ class MeatName(Enum):
     ground_beef = auto()
     calabrese_sausage = auto()
 
-
-class SeafoodName(Enum):
+    # seafood
     anchovies = auto()
     shrimp = auto()
     smoked_salmon = auto()
     tuna = auto()
     seaweed = auto()
 
-
-class HerbName(Enum):
+    # herb
     mushrooms = auto()
     bell_peppers = auto()
     red_onion = auto()
@@ -65,7 +63,66 @@ class HerbName(Enum):
     asparagus = auto()
 
 
-type IngredientName = CheeseName | MeatName | SeafoodName | HerbName
+cheese_names = (
+    IngredientName.mozzarella,
+    IngredientName.parmesan,
+    IngredientName.ricotta,
+    IngredientName.gorgonzola,
+    IngredientName.cheddar,
+    IngredientName.feta,
+    IngredientName.provolone,
+    IngredientName.burrata,
+    IngredientName.brie,
+    IngredientName.goat_cheese,
+    IngredientName.vegan_cheese,
+)
+
+
+meat_names = (
+    IngredientName.pepperoni,
+    IngredientName.ham,
+    IngredientName.bacon,
+    IngredientName.sausage,
+    IngredientName.chorizo,
+    IngredientName.salami,
+    IngredientName.grilled_chicken,
+    IngredientName.prosciutto,
+    IngredientName.ground_beef,
+    IngredientName.calabrese_sausage,
+)
+
+
+seafood_names = (
+    IngredientName.anchovies,
+    IngredientName.shrimp,
+    IngredientName.smoked_salmon,
+    IngredientName.tuna,
+    IngredientName.seaweed,
+)
+
+
+herb_names = (
+    IngredientName.mushrooms,
+    IngredientName.bell_peppers,
+    IngredientName.red_onion,
+    IngredientName.black_olives,
+    IngredientName.jalape_os,
+    IngredientName.spinach,
+    IngredientName.artichokes,
+    IngredientName.arugula,
+    IngredientName.sun_dried_tomatoes,
+    IngredientName.cherry_tomatoes,
+    IngredientName.zucchini,
+    IngredientName.eggplant,
+    IngredientName.broccoli,
+    IngredientName.capers,
+    IngredientName.basil,
+    IngredientName.garlic,
+    IngredientName.pineapple,
+    IngredientName.corn,
+    IngredientName.potato_slices,
+    IngredientName.asparagus,
+)
 
 
 @dataclass(kw_only=True, frozen=True, slots=True)

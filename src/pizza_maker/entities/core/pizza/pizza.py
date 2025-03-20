@@ -35,6 +35,9 @@ class Pizza(Identified[UUID]):
     ingredients: tuple[Ingredient, ...]
 
 
+type PizzaAggregate = Pizza | Sauce | Crust | Ingredient
+
+
 def created_pizza_when(
     *,
     access_token: AccessToken | None,

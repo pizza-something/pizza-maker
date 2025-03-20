@@ -1,4 +1,3 @@
-
 from sqlalchemy import (
     Column,
     ForeignKey,
@@ -16,7 +15,7 @@ from pizza_maker.entities.core.pizza.sauce import SauceName
 metadata = MetaData()
 
 sauce_name = postgresql.ENUM(SauceName, name="sauce_name")
-ingredient_name = postgresql.ENUM(IngredientName, "ingredient_name")
+ingredient_name = postgresql.ENUM(IngredientName, name="ingredient_name")
 
 user_table = Table(
     "users",
@@ -55,5 +54,5 @@ ingredient_table = Table(
     Column("id", Uuid(), primary_key=True, nullable=False),
     Column("pizza_id", ForeignKey("pizzas.id"), nullable=False),
     Column("name", ingredient_name, nullable=False),
-    Column("diameter", Integer(), nullable=False),
+    Column("grams", Integer(), nullable=False),
 )

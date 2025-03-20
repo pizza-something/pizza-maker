@@ -15,9 +15,9 @@ from pizza_maker.infrastructure.sqlalchemy.driver import (
 class InPostgresTransactionOf(TransactionOf[Sequence[PostgresDriver]]):
     @asynccontextmanager
     async def __call__(
-        self, storages: Sequence[PostgresDriver]
+        self, postgres_driver: Sequence[PostgresDriver]
     ) -> AsyncIterator[None]:
-        async with single_session_of(storages).begin():
+        async with single_session_of(postgres_driver).begin():
             yield
 
 

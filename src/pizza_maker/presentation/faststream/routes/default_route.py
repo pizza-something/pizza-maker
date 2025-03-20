@@ -12,9 +12,7 @@ def default_route_of(
         router.subscriber(
             topic,
             group_id="pizza-maker",
-            retry=True,
             auto_commit=False,
-            max_workers=16,
         )(hander)
 
         return router

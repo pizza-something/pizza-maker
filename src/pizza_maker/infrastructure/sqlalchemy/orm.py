@@ -11,6 +11,7 @@ from pizza_maker.entities.core.pizza.sauce import Sauce
 from pizza_maker.entities.core.user import User
 from pizza_maker.entities.units.grams import Grams
 from pizza_maker.entities.units.milliliters import Milliliters
+from pizza_maker.entities.units.millimeters import Millimeters
 from pizza_maker.infrastructure.sqlalchemy.tables import (
     crust_table,
     ingredient_table,
@@ -23,9 +24,11 @@ from pizza_maker.infrastructure.sqlalchemy.tables import (
 
 mapper_registry = registry(metadata=metadata)
 
-mapper_registry.map_imperatively(User, user_table)
 
-mapper_registry.map_imperatively(
+user_mapper = mapper_registry.map_imperatively(User, user_table)
+
+
+pizza_mapper = mapper_registry.map_imperatively(
     Pizza,
     pizza_table,
     properties=dict(
@@ -33,39 +36,51 @@ mapper_registry.map_imperatively(
         user_id=pizza_table.c.user_id,
         sauce=relationship(Sauce),
         crust=relationship(Crust),
-        ingredients=relationship(Ingredient, use_list=True)
+        ingredients=relationship(Ingredient, uselist=True)
     )
 )
 
-mapper_registry.map_imperatively(
+
+sauce_mapper = mapper_registry.map_imperatively(
     Sauce,
     sauce_table,
     properties=dict(
         id=sauce_table.c.id,
         pizza_id=sauce_table.c.pizza_id,
         name=sauce_table.c.name,
-        milliliters=composite(Milliliters, sauce_table.c.milliliters),
-    )
+    ),
+    exclude_properties=["milliliters"],
 )
+sauce_mapper.add_properties(dict(  # type: ignore[no-untyped-call]
+    milliliters=composite(Milliliters, sauce_table.c.milliliters),
+))
 
-mapper_registry.map_imperatively(
+
+crust_mapper = mapper_registry.map_imperatively(
     Crust,
     crust_table,
     properties=dict(
         id=crust_table.c.id,
         pizza_id=crust_table.c.pizza_id,
-        thickness=composite(Milliliters, crust_table.c.thickness),
-        diameter=composite(Milliliters, crust_table.c.diameter),
-    )
+    ),
+    exclude_properties=["thickness", "diameter"],
 )
+crust_mapper.add_properties(dict(  # type: ignore[no-untyped-call]
+    thickness=composite(Millimeters, crust_table.c.thickness),
+    diameter=composite(Millimeters, crust_table.c.diameter),
+))
 
-mapper_registry.map_imperatively(
+
+ingredient_mapper = mapper_registry.map_imperatively(
     Ingredient,
     ingredient_table,
     properties=dict(
         id=ingredient_table.c.id,
         pizza_id=ingredient_table.c.pizza_id,
         name=ingredient_table.c.name,
-        grams=composite(Grams, ingredient_table.c.grams),
-    )
+    ),
+    exclude_properties=["grams"],
 )
+ingredient_mapper.add_properties(dict(  # type: ignore[no-untyped-call]
+    grams=composite(Grams, ingredient_table.c.grams),
+))

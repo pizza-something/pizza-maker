@@ -1,6 +1,16 @@
+from dishka import AsyncContainer
+from dishka.integrations.faststream import setup_dishka
 from faststream import FastStream
-from faststream.kafka import KafkaBroker
+
+from pizza_maker.infrastructure.faststream.publisher_regitry import (
+    KafkaPublisherRegistry,
+)
 
 
-def app_with(broker: KafkaBroker) -> FastStream:
-    return FastStream(broker)
+async def app_from(container: AsyncContainer) -> FastStream:
+    regitry = await container.get(KafkaPublisherRegistry)
+
+    app = FastStream(regitry.broker)
+    setup_dishka(container, app, auto_inject=True)
+
+    return app

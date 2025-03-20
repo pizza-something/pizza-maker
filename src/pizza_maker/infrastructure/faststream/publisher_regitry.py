@@ -8,7 +8,7 @@ from pizza_maker.application.ports.event_queue import Event, PizzaCreatedEvent
 
 
 @dataclass(kw_only=True, slots=True)
-class PublisherRegistry:
+class KafkaPublisherRegistry:
     broker: KafkaBroker
     _map: dict[type[Event], AsyncAPIPublisher[Any]] = field(
         init=False, default_factory=dict

@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from functools import reduce
 from itertools import chain
 from operator import and_
-from typing import Any, Never, Self, cast
+from typing import Any, Generic, Never, Self, TypeVar, cast
 
 from pizza_maker.entities.common.identified import Identified, Identity
 
@@ -21,13 +21,14 @@ _no_value = _NoValue()
 class NoValueError(Exception): ...
 
 
-class _Effectable[
-    ValueT,
-    NewT: Identified,
-    DirtyT: Identified,
-    DeletedT: Identified,
-    JustT,
-](ABC):
+ValueT = TypeVar("ValueT")
+NewT = TypeVar("NewT", covariant=True, bound=Identified, default=Never)  # noqa: PLC0105
+DirtyT = TypeVar("DirtyT", covariant=True, bound=Identified, default=Never)  # noqa: PLC0105
+DeletedT = TypeVar("DeletedT", covariant=True, bound=Identified, default=Never)  # noqa: PLC0105
+JustT = TypeVar("JustT", default=Never)
+
+
+class _Effectable(Generic[ValueT, NewT, DirtyT, DeletedT, JustT], ABC):
     @abstractmethod
     def _just(self) -> JustT: ...
 
@@ -36,12 +37,10 @@ class _Effectable[
 
 
 @dataclass(kw_only=True, frozen=True, slots=True)
-class Effect[
-    ValueT = Never,
-    NewT: Identified = Never,
-    DirtyT: Identified = Never,
-    DeletedT: Identified = Never,
-](_Effectable[ValueT, NewT, DirtyT, DeletedT, ValueT]):
+class Effect(
+    Generic[ValueT, NewT, DirtyT, DeletedT],
+    _Effectable[ValueT, NewT, DirtyT, DeletedT, ValueT]
+):
     _value: ValueT
     new_values: tuple[NewT, ...]
     dirty_values: tuple[DirtyT, ...]
@@ -196,40 +195,34 @@ class _Effects[
 
 
 type AnyEffect[
-    ValueT = Any,
-    NewT: Identified = Any,
-    DirtyT: Identified = Any,
-    DeletedT: Identified = Any,
-] = Effect[ValueT, NewT, DirtyT, DeletedT]
+    _ValueT = Any,
+    _NewT: Identified = Any,
+    _DirtyT: Identified = Any,
+    _DeletedT: Identified = Any,
+] = Effect[_ValueT, _NewT, _DirtyT, _DeletedT]
 
-type LifeCycle[ValueT: Identified] = (
-    Effect[Any, Never, Never, Never]
-    | Effect[Any, ValueT, Never, Never]
-    | Effect[Any, Never, ValueT, Never]
-    | Effect[Any, ValueT, ValueT, Never]
-    | Effect[Any, Never, Never, ValueT]
-    | Effect[Any, ValueT, Never, ValueT]
-    | Effect[Any, Never, ValueT, ValueT]
-    | Effect[Any, ValueT, ValueT, ValueT]
-)
 
-type Existing[ValueT: Identified] = Effect[ValueT, Never, Never, Never]
-type New[ValueT: Identified] = Effect[ValueT, ValueT, Never, Never]
-type Dirty[ValueT: Identified] = Effect[ValueT, Never, ValueT, Never]
-type Deleted[ValueT: Identified] = Effect[ValueT, Never, Never, ValueT]
+type LifeCycle[_ValueT: Identified] = Effect[Any, _ValueT, _ValueT, _ValueT]
+
+type Existing[_ValueT: Identified] = Effect[_ValueT, Never, Never, Never]
+type New[_ValueT: Identified] = Effect[_ValueT, _ValueT, Never, Never]
+type Dirty[_ValueT: Identified] = Effect[_ValueT, Never, _ValueT, Never]
+type Deleted[_ValueT: Identified] = Effect[_ValueT, Never, Never, _ValueT]
 
 
 def just[JustT](value: _Effectable[Any, Any, Any, Any, JustT]) -> JustT:
     return value._just()  # noqa: SLF001
 
 
-def many[ValueT, NewT: Identified, DirtyT: Identified, DeletedT: Identified](
-    effects: Iterable[Effect[ValueT, NewT, DirtyT, DeletedT]]
-) -> _Effects[ValueT, NewT, DirtyT, DeletedT]:
+def many[
+    _ValueT, _NewT: Identified, _DirtyT: Identified, _DeletedT: Identified
+](
+    effects: Iterable[Effect[_ValueT, _NewT, _DirtyT, _DeletedT]]
+) -> _Effects[_ValueT, _NewT, _DirtyT, _DeletedT]:
     return _Effects(effects)
 
 
-def existing[ValueT: Identified](value: ValueT) -> Existing[ValueT]:
+def existing[_ValueT: Identified](value: _ValueT) -> Existing[_ValueT]:
     return Effect(
         _value=value,
         new_values=tuple(),
@@ -238,7 +231,7 @@ def existing[ValueT: Identified](value: ValueT) -> Existing[ValueT]:
     )
 
 
-def new[ValueT: Identified](value: ValueT) -> New[ValueT]:
+def new[_ValueT: Identified](value: _ValueT) -> New[_ValueT]:
     return Effect(
         _value=value,
         new_values=(value, ),
@@ -247,7 +240,7 @@ def new[ValueT: Identified](value: ValueT) -> New[ValueT]:
     )
 
 
-def dirty[ValueT: Identified](value: ValueT) -> Dirty[ValueT]:
+def dirty[_ValueT: Identified](value: _ValueT) -> Dirty[_ValueT]:
     return Effect(
         _value=value,
         new_values=tuple(),
