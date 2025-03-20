@@ -125,7 +125,7 @@ herb_names = (
 )
 
 
-@dataclass(kw_only=True, frozen=True, slots=True)
+@dataclass(kw_only=True, frozen=True)
 class Ingredient(Identified[UUID]):
     id: UUID
     pizza_id: UUID
@@ -133,7 +133,7 @@ class Ingredient(Identified[UUID]):
     grams: Grams
 
 
-@dataclass(kw_only=True, frozen=True, slots=True)
+@dataclass(kw_only=True, frozen=True)
 class IngredientData:
     name: IngredientName
     grams: Grams

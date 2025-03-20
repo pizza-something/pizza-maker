@@ -36,7 +36,7 @@ sauce_table = Table(
     Column("id", Uuid(), primary_key=True, nullable=False),
     Column("pizza_id", ForeignKey("pizzas.id"), nullable=False),
     Column("name", sauce_name, nullable=False),
-    Column("milliliters", Integer(), nullable=False),
+    Column("milliliters_number", Integer(), nullable=False),
 )
 
 crust_table = Table(
@@ -44,8 +44,8 @@ crust_table = Table(
     metadata,
     Column("id", Uuid(), primary_key=True, nullable=False),
     Column("pizza_id", ForeignKey("pizzas.id"), nullable=False),
-    Column("thickness", Integer(), nullable=False),
-    Column("diameter", Integer(), nullable=False),
+    Column("thickness_millimeters_number", Integer(), nullable=False),
+    Column("diameter_millimeters_number", Integer(), nullable=False),
 )
 
 ingredient_table = Table(
@@ -54,5 +54,5 @@ ingredient_table = Table(
     Column("id", Uuid(), primary_key=True, nullable=False),
     Column("pizza_id", ForeignKey("pizzas.id"), nullable=False),
     Column("name", ingredient_name, nullable=False),
-    Column("grams", Integer(), nullable=False),
+    Column("grams_number", Integer(), nullable=False),
 )

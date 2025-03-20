@@ -4,13 +4,13 @@ from uuid import UUID
 from pizza_maker.entities.time.time import Time
 
 
-@dataclass(kw_only=True, frozen=True, slots=True)
+@dataclass(kw_only=True, frozen=True)
 class AccessToken:
     user_id: UUID
     expiration_time: Time
 
 
-@dataclass(kw_only=True, frozen=True, slots=True)
+@dataclass(kw_only=True, frozen=True)
 class ValidAccessToken:
     user_id: UUID
 

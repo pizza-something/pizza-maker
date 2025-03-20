@@ -12,7 +12,7 @@ from pizza_maker.entities.common.identified import Identified
 from pizza_maker.entities.time.time import Time
 
 
-@dataclass(kw_only=True, frozen=True, slots=True)
+@dataclass(kw_only=True, frozen=True)
 class User(Identified[UUID]):
     id: UUID
 

@@ -4,7 +4,7 @@ from dataclasses import dataclass
 class NegaiveMillimetersError(Exception): ...
 
 
-@dataclass(kw_only=True, frozen=True, slots=True)
+@dataclass(kw_only=True, frozen=True)
 class Millimeters:
     """
     :raises input.entities.units.millimeters.NegaiveMillimetersError:

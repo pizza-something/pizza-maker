@@ -21,7 +21,7 @@ class SauceName(Enum):
     ketchup = auto()
 
 
-@dataclass(kw_only=True, frozen=True, slots=True)
+@dataclass(kw_only=True, frozen=True)
 class Sauce(Identified[UUID]):
     id: UUID
     pizza_id: UUID
@@ -29,7 +29,7 @@ class Sauce(Identified[UUID]):
     milliliters: Milliliters
 
 
-@dataclass(kw_only=True, frozen=True, slots=True)
+@dataclass(kw_only=True, frozen=True)
 class SauceData:
     name: SauceName
     milliliters: Milliliters

@@ -7,7 +7,7 @@ from pizza_maker.entities.common.identified import Identified
 from pizza_maker.entities.units.millimeters import Millimeters
 
 
-@dataclass(kw_only=True, frozen=True, slots=True)
+@dataclass(kw_only=True, frozen=True)
 class Crust(Identified[UUID]):
     id: UUID
     pizza_id: UUID
@@ -15,7 +15,7 @@ class Crust(Identified[UUID]):
     diameter: Millimeters
 
 
-@dataclass(kw_only=True, frozen=True, slots=True)
+@dataclass(kw_only=True, frozen=True)
 class CrustData:
     thickness: Millimeters
     diameter: Millimeters

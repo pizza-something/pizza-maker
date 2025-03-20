@@ -13,6 +13,7 @@ def default_route_of(
             topic,
             group_id="pizza-maker",
             auto_commit=False,
+            auto_offset_reset="earliest",
         )(hander)
 
         return router

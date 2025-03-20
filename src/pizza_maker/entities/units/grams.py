@@ -4,7 +4,7 @@ from dataclasses import dataclass
 class NegaiveGramsError(Exception): ...
 
 
-@dataclass(kw_only=True, frozen=True, slots=True)
+@dataclass(kw_only=True, frozen=True)
 class Grams:
     """
     :raises input.entities.units.grams.NegaiveGramsError:

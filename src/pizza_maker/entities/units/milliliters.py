@@ -4,7 +4,7 @@ from dataclasses import dataclass
 class NegaiveMillilitersError(Exception): ...
 
 
-@dataclass(kw_only=True, frozen=True, slots=True)
+@dataclass(kw_only=True, frozen=True)
 class Milliliters:
     """
     :raises input.entities.units.milliliters.NegaiveMillilitersError:

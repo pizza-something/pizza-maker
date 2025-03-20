@@ -26,7 +26,7 @@ from pizza_maker.entities.core.user import (
 from pizza_maker.entities.time.time import Time
 
 
-@dataclass(kw_only=True, frozen=True, slots=True)
+@dataclass(kw_only=True, frozen=True)
 class Pizza(Identified[UUID]):
     id: UUID
     user_id: UUID

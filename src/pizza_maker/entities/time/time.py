@@ -5,7 +5,7 @@ from datetime import UTC, datetime
 class NotUTCTimeError(Exception): ...
 
 
-@dataclass(kw_only=True, frozen=True, slots=True)
+@dataclass(kw_only=True, frozen=True)
 class Time:
     """
     :raises pizza_maker.entities.time.time.NotUTCTimeError:
