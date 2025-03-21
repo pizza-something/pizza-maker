@@ -8,8 +8,8 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
-from pizza_maker.infrastructure.typenv.envs import TestsEnvs
 from pizza_maker.infrastructure.sqlalchemy.tables import metadata
+from pizza_maker.infrastructure.typenv.envs import TestsEnvs
 
 
 @fixture(scope="session")
