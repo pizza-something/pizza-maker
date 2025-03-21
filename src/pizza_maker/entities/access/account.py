@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from uuid import UUID
 
-from pizza_maker.entities.common.identified import Identified
+from effect import Identified
 
 
 @dataclass(kw_only=True, frozen=True)

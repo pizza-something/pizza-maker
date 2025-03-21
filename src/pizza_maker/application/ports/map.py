@@ -2,7 +2,8 @@ from abc import ABC, abstractmethod
 from collections.abc import Sequence
 from typing import Any
 
-from pizza_maker.entities.common.effect import LifeCycle
+from effect import LifeCycle
+
 from pizza_maker.entities.core.pizza.pizza import PizzaAggregate
 from pizza_maker.entities.core.user import UserAggregate
 

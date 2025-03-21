@@ -157,6 +157,15 @@ wheels = [
 ]
 
 [[package]]
+name = "effectt"
+version = "0.1.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/38/30/ea51f40bdb13406d735b2e1ee7034587083a765fd1af397a7b83e297da04/effectt-0.1.1.tar.gz", hash = "sha256:456c56b1e6935ba3aef22168fb618bacb9908587c57a7aea0da4154e0789ec27", size = 20834 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/65/1c/a068bf70f4c7263f41c9dbfbc1fab10c7c439e64958c52c90900be63a442/effectt-0.1.1-py3-none-any.whl", hash = "sha256:25033fb842716564803a5d8774654bec743a8ad0b1e9733d1d6a8fe69d7d439f", size = 12282 },
+]
+
+[[package]]
 name = "fast-depends"
 version = "2.4.12"
 source = { registry = "https://pypi.org/simple" }
@@ -469,6 +478,7 @@ dependencies = [
     { name = "alembic" },
     { name = "alembic-postgresql-enum" },
     { name = "dishka" },
+    { name = "effectt" },
     { name = "fastapi" },
     { name = "faststream", extra = ["kafka"] },
     { name = "psycopg", extra = ["binary"] },
@@ -498,6 +508,7 @@ requires-dist = [
     { name = "alembic-postgresql-enum", specifier = "==1.7.0" },
     { name = "dirty-equals", marker = "extra == 'dev'", specifier = "==0.8.0" },
     { name = "dishka", specifier = "==1.4.2" },
+    { name = "effectt", specifier = "==0.1.1" },
     { name = "fastapi", specifier = "==0.115.2" },
     { name = "faststream", extras = ["cli"], marker = "extra == 'dev'", specifier = "==0.5.35" },
     { name = "faststream", extras = ["kafka"], specifier = "==0.5.35" },

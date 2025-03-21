@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from typing import overload
 from uuid import UUID, uuid4
 
-from pizza_maker.entities.common.effect import Dirty, New, dirty, new
-from pizza_maker.entities.common.identified import Identified
+from effect import Identified, Mutated, New, mutated, new
+
 from pizza_maker.entities.units.millimeters import Millimeters
 
 
@@ -24,7 +24,7 @@ class CrustData:
 @overload
 def new_crust_when(
     *, crust: Crust, crust_data: CrustData, pizza_id: UUID
-) -> Dirty[Crust]: ...
+) -> Mutated[Crust]: ...
 
 
 @overload
@@ -35,7 +35,7 @@ def new_crust_when(
 
 def new_crust_when(
     *, crust: Crust | None, crust_data: CrustData, pizza_id: UUID
-) -> New[Crust] | Dirty[Crust]:
+) -> New[Crust] | Mutated[Crust]:
     if crust is None:
         return new(Crust(
             id=uuid4(),
@@ -44,7 +44,7 @@ def new_crust_when(
             pizza_id=pizza_id,
         ))
 
-    return dirty(Crust(
+    return mutated(Crust(
         id=crust.id,
         thickness=crust_data.thickness,
         diameter=crust_data.diameter,

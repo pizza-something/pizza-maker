@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from uuid import UUID, uuid4
 
-from pizza_maker.entities.common.effect import Dirty, New, dirty, new
-from pizza_maker.entities.common.identified import Identified
+from effect import Identified, Mutated, New, mutated, new
+
 from pizza_maker.entities.units.grams import Grams
 
 
@@ -157,8 +157,8 @@ def changed_ingredient_when(
     ingredient: Ingredient,
     ingredient_data: IngredientData,
     pizza_id: UUID,
-) -> Dirty[Ingredient]:
-    return dirty(Ingredient(
+) -> Mutated[Ingredient]:
+    return mutated(Ingredient(
         id=ingredient.id,
         name=ingredient_data.name,
         grams=ingredient_data.grams,

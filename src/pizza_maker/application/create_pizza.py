@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from typing import Any
 
+from effect import just
+
 from pizza_maker.application.dtos.crust_data_dto import (
     CrustDataDto,
     input_crust_data_of,
@@ -25,7 +27,6 @@ from pizza_maker.application.ports.map import MapTo
 from pizza_maker.application.ports.pizzas import Pizzas
 from pizza_maker.application.ports.transaction import TransactionOf
 from pizza_maker.application.ports.users import Users
-from pizza_maker.entities.common.effect import just
 from pizza_maker.entities.core.pizza.pizza import created_pizza_when
 
 

@@ -1,14 +1,14 @@
 from dataclasses import dataclass
 from uuid import UUID
 
+from effect import Existing, Identified, New, existing, new
+
 from pizza_maker.entities.access.access_token import (
     AccessToken,
     InvalidAccessTokenForAuthenticationError,
     valid,
 )
 from pizza_maker.entities.access.account import Account
-from pizza_maker.entities.common.effect import Existing, New, existing, new
-from pizza_maker.entities.common.identified import Identified
 from pizza_maker.entities.time.time import Time
 
 

@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from uuid import UUID, uuid4
 
+from effect import Effect, Identified, just, many, new
+
 from pizza_maker.entities.access.access_token import AccessToken
-from pizza_maker.entities.common.effect import Effect, just, many, new
-from pizza_maker.entities.common.identified import Identified
 from pizza_maker.entities.core.pizza.crust import (
     Crust,
     CrustData,

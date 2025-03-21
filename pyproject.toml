@@ -21,6 +21,7 @@ dependencies = [
     "alembic-postgresql-enum==1.7.0",
     "taskiq-redis==1.0.3",
     "faststream[kafka]==0.5.35",
+    "effectt==0.1.1",
 ]
 
 [project.optional-dependencies]

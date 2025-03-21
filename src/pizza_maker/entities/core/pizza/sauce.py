@@ -3,8 +3,8 @@ from enum import Enum, auto
 from typing import overload
 from uuid import UUID, uuid4
 
-from pizza_maker.entities.common.effect import Dirty, New, dirty, new
-from pizza_maker.entities.common.identified import Identified
+from effect import Identified, Mutated, New, mutated, new
+
 from pizza_maker.entities.units.milliliters import Milliliters
 
 
@@ -38,7 +38,7 @@ class SauceData:
 @overload
 def new_sauce_when(
     *, sauce: Sauce, sauce_data: SauceData, pizza_id: UUID,
-) -> Dirty[Sauce]: ...
+) -> Mutated[Sauce]: ...
 
 
 @overload
@@ -49,7 +49,7 @@ def new_sauce_when(
 
 def new_sauce_when(
     *, sauce: Sauce | None, sauce_data: SauceData, pizza_id: UUID,
-) -> New[Sauce] | Dirty[Sauce]:
+) -> New[Sauce] | Mutated[Sauce]:
     if sauce is None:
         return new(Sauce(
             id=uuid4(),
@@ -58,7 +58,7 @@ def new_sauce_when(
             pizza_id=pizza_id,
         ))
 
-    return dirty(Sauce(
+    return mutated(Sauce(
         id=sauce.id,
         name=sauce_data.name,
         milliliters=sauce_data.milliliters,

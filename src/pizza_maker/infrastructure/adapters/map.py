@@ -17,8 +17,8 @@ class MapToPostgres(MapTo[Sequence[PostgresDriver]]):
 
         session.add_all(effect.new_values)
 
-        for dirty_value in effect.  dirty_values:
-            await session.merge(dirty_value, load=False)
+        for mutated_value in effect.  mutated_values:
+            await session.merge(mutated_value, load=False)
 
         for deleted_value in effect.deleted_values:
             await session.delete(deleted_value)
