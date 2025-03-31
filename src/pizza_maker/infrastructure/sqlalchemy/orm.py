@@ -29,11 +29,28 @@ def _mutable[T: type](type_: T) -> T:
     return type_
 
 
+def create_milliliters(number: int) -> Milliliters:
+    return Milliliters(number=number)
+
+
+def create_millimeters(number: int) -> Millimeters:
+    return Millimeters(number=number)
+
+
+def create_grams(number: int) -> Grams:
+    return Grams(number=number)
+
+
+Milliliters.__composite_values__ = lambda self: (self.number,)  # type: ignore[attr-defined]
+Millimeters.__composite_values__ = lambda self: (self.number,)  # type: ignore[attr-defined]
+Grams.__composite_values__ = lambda self: (self.number,)  # type: ignore[attr-defined]
+
+
 mapper_registry = registry(metadata=metadata)
 
 mapper_registry.map_imperatively(_mutable(User), user_table)
 mapper_registry.map_imperatively(
-    Pizza,
+    _mutable(Pizza),
     pizza_table,
     properties=dict(
         id=pizza_table.c.id,
@@ -50,7 +67,9 @@ mapper_registry.map_imperatively(
         id=sauce_table.c.id,
         pizza_id=sauce_table.c.pizza_id,
         name=sauce_table.c.name,
-        milliliters=composite(Milliliters, sauce_table.c.milliliters_number),
+        milliliters=composite(
+            create_milliliters, sauce_table.c.milliliters_number
+        ),
     ),
 )
 mapper_registry.map_imperatively(
@@ -60,10 +79,10 @@ mapper_registry.map_imperatively(
         id=crust_table.c.id,
         pizza_id=crust_table.c.pizza_id,
         thickness=composite(
-            Millimeters, crust_table.c.thickness_millimeters_number
+            create_millimeters, crust_table.c.thickness_millimeters_number
         ),
         diameter=composite(
-            Millimeters, crust_table.c.diameter_millimeters_number
+            create_millimeters, crust_table.c.diameter_millimeters_number
         ),
     ),
 )
@@ -74,6 +93,6 @@ mapper_registry.map_imperatively(
         id=ingredient_table.c.id,
         pizza_id=ingredient_table.c.pizza_id,
         name=ingredient_table.c.name,
-        grams=composite(Grams, ingredient_table.c.grams_number),
+        grams=composite(create_grams, ingredient_table.c.grams_number),
     ),
 )
